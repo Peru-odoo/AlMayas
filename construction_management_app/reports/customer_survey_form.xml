@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="customer_survey_form_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <style>
+                    #customers {
+                    font-family: Arial, Helvetica, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                    }
+
+                    #customers td, #customers th {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    }
+
+                    #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+                    #customers tr:hover {background-color: #ddd;}
+
+                    #customers th {
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    text-align: center;
+                    background-color:#ff3300;
+                    color: white;
+                    }
+                </style>
+                <header>
+                    <t t-if="o.company_id.certificate_header">
+                        <img style="width:100%;z-index:600;height: 100px;" t-att-src="'data:image/png;base64,%s' % to_text(o.company_id.certificate_header)"/>
+                    </t>
+                </header>
+
+                <div class="page" style="text-align:center;">
+                    <!--                    <div style="width:100%;left:0px;top:0px;">-->
+                    <!--                        <t t-if="o.company_id.certificate_header">-->
+                    <!--                            <img style="width:100%;z-index:800;" t-att-src="'data:image/png;base64,%s'%to_text(o.company_id.certificate_header)"/>-->
+                    <!--                        </t>-->
+                    <!--                    </div>-->
+
+                    <h2 style="text-align:center;">CUSTOMER SATISFACTION SURVEY FORM</h2>
+                    <hr style="border-top: 1px solid black;margin-top:30px;"></hr>
+                    <br/>
+                    <table id="customers">
+                        <tr>
+                            <th>Sl. No.</th>
+                            <th>Details</th>
+                            <th>Very Satisfied<br/>(5)</th>
+                            <th>Satified<br/>(4)</th>
+                            <th>Avearage Stified<br/>(3)</th>
+                            <th>Dis-Satisfied<br/>(2)</th>
+                            <th>Very Dis-Satisfied<br/>(1)</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Quality of Product</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Punctuality in supplies</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Management Services</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Sales Services</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Accounts Services</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Response to customer complaints</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>General attitude of staff</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>Overall Satisfaction</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>How does company services and products compared to other competitors</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+
+                    <br/>
+                    <div style="width:100%;text-align:left;font-size:18px;"><strong>Comments:</strong>
+                        <hr style="border-top: 1px dashed black;margin-top:30px;"></hr>
+                        <hr style="border-top: 1px dashed black;margin-top:30px;"></hr><br/>
+                    </div>
+                    <br/>
+                    <table style="border-collapse: collapse;width: 100%;">
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td>Company</td>
+                            <td><strong><span t-esc="o.partner_id.name"/></strong></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td>Job No.</td>
+                            <td><strong><span t-esc="o.job_order"/></strong></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td>Project Detail:</td>
+                            <td><strong><span t-esc="o.name"/></strong></td>
+                        </tr>
+                    </table>
+
+                    <br/>
+                    <div style="width:100%;text-align:left;font-size:18px;margin-top:100px;">
+                        <span>Name</span> <span>...................................................................</span><br/><br/><br/>
+                        <span>Signature</span><span>...............................................................</span><br/><br/><br/>
+                        <span>Date</span> <span>.....................................................................</span>
+
+                    </div>
+                    <br/>
+                </div>
+                <footer style="border-top: 1px solid black;position:fixed;top:1200px;width:100%;display:block;margin:0 auto;margin-left:-8px;text-align:center;" class="footer o_standard_footer">
+                    <p>Tel.: 06-5345347 Fax : 06-5345990 P.O.Box : 27734  Sharjah – U.A.E. E- mail : info@almayasuae.com<br/>
+                        Tel: 04-2257511 Fax : 04-2257511 P.O.Box : 234828  Dubai –U.A.E. Website : www.almayasuae.com  </p>
+                </footer>
+
+            </t>
+        </t>
+
+    </template>
+
+    <report
+            string="Customer Survey Form"
+            id="action_customer_survey_form"
+            model="project.project"
+            name="construction_management_app.customer_survey_form_template"
+            file="construction_management_app.customer_survey_form_template"
+            report_type="qweb-pdf"
+            paperformat="construction_management_app.proforma_paper_format"/>
+
+
+</odoo>

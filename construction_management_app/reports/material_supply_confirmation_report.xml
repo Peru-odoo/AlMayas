@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="material_supply_confirmation_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="header">
+                    <div class="row">
+                        <t t-if="o.company_id.certificate_header">
+                            <img style="width:100%;z-index:600;height: 100px;" t-att-src="'data:image/png;base64,%s' % to_text(o.company_id.certificate_header)"/>
+                        </t>
+                    </div>
+                </div>
+                <div t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" class="article">
+                    <div class="page" style="text-align:center;">
+                        <br/>
+                        <div class="table-responsive-sm">
+                        </div>
+                        <div style="margin-top:100px;"/>
+                        <h6 style="text-align:left;"><b>Ref.No : <span t-esc="o.project_id.sale_order_id.name"/></b> </h6>
+                        <h6 style="text-align:left;"><b>Date : <span t-esc="o.date"/></b> </h6>
+                        <h6 style="text-align:left;"><b>TO : </b></h6>
+                        <table class="table-fill" style="margin-top:30px;">
+                            <tbody class="table-hover">
+                                <tr>
+                                    <td class="text-left" width="30%">Project</td>
+                                    <td class="text-left" width="20%">-</td>
+                                    <td class="text-left" width="50%"><b><span t-esc="o.project_id.name"/></b></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Client Owner</td>
+                                    <td class="text-left">-</td>
+                                    <td class="text-left"><b><span t-esc="o.client"/></b></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Consultant</td>
+                                    <td class="text-left">-</td>
+                                    <td class="text-left"><b><span t-esc="o.consultant"/></b></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Contractor</td>
+                                    <td class="text-left">-</td>
+                                    <td class="text-left"><b><span t-esc="o.project_id.partner_id.name"/></b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                        <h4 style="text-align:center;margin-top:15px;"><b>MATERIAL SUPPLY CONFIRMATION</b></h4>
+                        <hr style=" display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 1px;"></hr>
+                        <span>
+                            <span style="text-align:left;font-size:14px;" t-raw="o.nature_work"/>
+                        </span>
+                        <div style="width:100%;text-align:left;font-size:14px;">
+                            <span><i>For</i><strong> <span t-esc="o.company_id.name"/></strong></span>
+                        </div><br/><br/>
+                        <div style="width:100%;text-align:left;font-size:14px;">
+                            <span><strong> Authorized Signatory</strong></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer" style="font-size:16px;border-top:1px solid black;text-align:center;">
+                    <p>Tel.: 06-5345347 Fax : 06-5345990 P.O.Box : 27734  Sharjah – U.A.E. E- mail : info@almayasuae.com<br/>
+                        Tel: 04-2257511 Fax : 04-2257511 P.O.Box : 234828  Dubai –U.A.E. Website : www.almayasuae.com  </p>
+                </div>
+
+            </t>
+        </t>
+
+    </template>
+
+    <report
+            string="Material Supply Confirmation"
+            id="action_material_supply_confirmation_report"
+            model="material.supply.confirmation"
+            name="construction_management_app.material_supply_confirmation_report_template"
+            file="construction_management_app.material_supply_confirmation_report_template"
+            report_type="qweb-pdf"
+            attachment_use="True"
+            attachment="'Material Supply Confirmation Report' + '.pdf'"
+            paperformat="construction_management_app.water_proofing_paper_format"/>
+
+
+</odoo>

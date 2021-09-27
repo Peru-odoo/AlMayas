@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="water_proofing_guarantee_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="header">
+                    <div class="row">
+                        <t t-if="o.company_id.certificate_header">
+                            <img style="width:100%;z-index:600;height: 100px;" t-att-src="'data:image/png;base64,%s' % to_text(o.company_id.certificate_header)"/>
+                        </t>
+
+                    </div>
+                </div>
+                <div t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" class="article">
+                    <style>
+                        #customers {
+                        font-family: Arial, Helvetica, sans-serif;
+                        border-collapse: collapse;
+                        width: 100%;
+                        font-size:13px;
+                        }
+
+                        #customers td, #customers th {
+                        border: 1px solid #ddd;
+                        padding: 8px;
+                        }
+
+                        #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+                        #customers tr:hover {background-color: #ddd;}
+
+                        #customers th {
+                        padding-top: 12px;
+                        padding-bottom: 12px;
+                        text-align: left;
+                        background-color: #04AA6D;
+                        color: white;
+                        }
+                    </style>
+                    <div class="page" style="text-align:left;">
+                        <br/>
+                        <div style="margin-top:95px;"/>
+                        <h4 style="text-align:center;">GUARANTEE CERTIFICATE</h4>
+                        <hr></hr>
+
+                        <table id="customers">
+                            <tr>
+                                <td>NAME OF THE CLIENT</td>
+                                <td><b><span t-esc="o.client"/></b></td>
+                            </tr>
+                            <tr>
+                                <td>PROJECT</td>
+                                <td><b><span t-esc="o.project_id.name"/></b></td>
+                            </tr>
+                            <tr>
+                                <td>MAIN CONTRACTOR</td>
+                                <td><b><span t-esc="o.project_id.partner_id.name"/></b></td>
+                            </tr>
+                            <tr>
+                                <td>CONSULTANT</td>
+                                <td><b><span t-esc="o.consultant"/></b></td>
+                            </tr>
+                            <tr>
+                                <td>SYSTEM APPLIED</td>
+                                <td><b><span t-esc="o.project_id.construction_type.name"/></b></td>
+                            </tr>
+                            <tr>
+                                <td>GUARANTEE PERIOD</td>
+                                <td><b><span t-esc="o.guarantee_period"/></b></td>
+                            </tr>
+                            <tr>
+                                <td>COMMENCING</td>
+                                <td><b><span t-esc="o.date"/></b></td>
+                            </tr>
+                            <tr>
+                                <td>EXPIRING</td>
+                                <td><b><span t-esc="o.expiring"/></b></td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <span>
+                            <span style="text-align:left;font-size:14px;padding:0px 0px;" t-raw="o.nature_work"/>
+                        </span>
+                        <div style="width:100%;text-align:left;font-size:16px;"><strong><span>
+                            <i>For</i> <span t-esc="o.company_id.name"/>
+                        </span></strong>
+                        </div>
+                        <br/>
+                    </div>
+                </div>
+                <div class="footer" style="font-size:16px;border-top:1px solid black;text-align:center;">
+                    <p>Tel.: 06-5345347 Fax : 06-5345990 P.O.Box : 27734  Sharjah – U.A.E. E- mail : info@almayasuae.com<br/>
+                        Tel: 04-2257511 Fax : 04-2257511 P.O.Box : 234828  Dubai –U.A.E. Website : www.almayasuae.com  </p>
+                </div>
+            </t>
+        </t>
+
+    </template>
+
+    <report
+            string="Water Proofing Guarantee"
+            id="action_water_proofing_guarantee_report"
+            model="water.proofing.guarantee"
+            name="construction_management_app.water_proofing_guarantee_report_template"
+            file="construction_management_app.water_proofing_guarantee_report_template"
+            report_type="qweb-pdf"
+            attachment_use="True"
+            attachment="'Guarantee Certificate' + '.pdf'"
+            paperformat="construction_management_app.water_proofing_paper_format"/>
+
+
+</odoo>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="sales_project_quotation_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="header">
+                    <div class="row">
+                        <t t-if="o.company_id.certificate_header">
+                            <img style="width:100%;z-index:600;height: 100px;" t-att-src="'data:image/png;base64,%s' % to_text(o.company_id.certificate_header)"/>
+                        </t>
+                    </div>
+                </div>
+                <div class="page" style="line-height: 1.6;">
+                    <table style="border-collapse: collapse;width: 100%;">
+
+                        <tbody>
+                            <tr style="background-color: #f2f2f2;">
+                                <td style="padding: 12px 15px;width:30%">To</td>
+                                <td style="padding: 12px 15px;width:70%"><span t-esc="o.sale_id.partner_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 15px;">From</td>
+                                <td style="padding: 12px 15px;"><span t-esc="o.company_id.name"/></td>
+                            </tr>
+                            <tr style="background-color: #f2f2f2;">
+                                <td style="padding: 12px 15px;">Telephone</td>
+                                <td style="padding: 12px 15px;"><span t-esc="o.sale_id.partner_id.phone"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 15px;">Fax</td>
+                                <td style="padding: 12px 15px;"><span t-esc="o.sale_id.partner_id.mobile"/></td>
+                            </tr>
+                            <tr style="background-color: #f2f2f2;">
+                                <td style="padding: 12px 15px;">Date</td>
+                                <td style="padding: 12px 15px;"><span t-esc="o.date"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 15px;">Attn</td>
+                                <td style="padding: 12px 15px;"><span t-esc="o.attention"/></td>
+                            </tr>
+                            <tr style="background-color: #f2f2f2;">
+                                <td style="padding: 12px 15px;">Ref. No.</td>
+                                <td style="padding: 12px 15px;"><span t-esc="o.sale_id.name"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+
+                    <br/>
+                    <div style="width:100%; font-size:18px;font-weight:bold;margin-top:15px;">
+                        <div style="width:20%;border-bottom:1px solid black;float:left">Project:</div>
+                        <div style="width:80%;border-bottom:1px solid black;float:left;"><span t-esc="o.sale_id.project_name" style="text-align:left;"/></div>
+                    </div>
+                    <br/>
+                    <div style="width:100%; font-size:18px;font-weight:bold;margin-top:15px;">
+                        <div style="width:20%;border-bottom:1px solid black;float:left">Subject:</div>
+                        <div style="width:80%;border-bottom:1px solid black;float:left;"><span t-esc="o.subject" style="text-align:left;"/></div>
+                    </div>
+                    <br/>
+                    <div style="width:100%;">
+                        <span style="text-align:left;font-size:16px;" t-raw="o.nature_work"/>
+                    </div>
+                    <br/>
+                    <div style="width:100%;border-bottom: 1px solid #aaa;">
+                        <h3>Scope Of Work :</h3>
+                        <span t-esc="o.scope_work"/>
+                    </div>
+                    <div style="width:100%;border-bottom: 1px solid #aaa;">
+                        <h3>Wet Area :</h3>
+                        <span t-esc="o.wet_area"/>
+                    </div>
+                    <div>
+                        Note: All required documents like submittals, samples and drawings, and approvals from consultant/client/ any other authority should be taken prior to start the work. (VAT will be applicable)
+
+                    </div>
+                    <p style="page-break-after:always;"/>
+                    <div style="width:100%;">
+                        <h4><u><i>EXCLUSIONS:</i></u><i>(To be provided by the main contractor)</i></h4>
+                        <span style="text-align:left" t-raw="o.exclusions"/>
+                    </div>
+                    <div style="width:100%;">
+                        <h4><u><i>Special Note:</i></u></h4>
+                        <span style="text-align:left" t-raw="o.special_notes"/>
+                    </div>
+                    <div style="width:100%;">
+                        <h4><u>GUARANTEE</u></h4>
+                        <span t-esc="o.guarantee"/>
+                    </div>
+                    <div style="width:100%;">
+                        <h4><u> CONTRACT</u></h4>
+                        <span t-esc="o.contract"/>
+                    </div>
+                    <div style="width:100%;">
+                        <h4><u> VALIDITY OF QUOTATION</u></h4>
+                        <span t-esc="o.sale_id.validity"/>
+                    </div>
+                    <div style="width:100%;">
+                        <h4><u> PAYMENT TERMS(please refer the payment and collection)</u></h4>
+                        <span t-esc="o.sale_id.payment_term_id.name"/>
+                    </div>
+                    <div style="width:100%;">
+                        <h4><u> COMMENCEMENT</u></h4>
+                        <span t-esc="o.commencement"/>
+                    </div>
+                    <div style="width:100%;">
+                        <p style="margin-top: 0;margin-bottom:0;"><b><span t-esc="o.sale_id.sales_person.name"/> </b></p>
+                        <p style="margin-top: 0;margin-bottom:0;"><span t-esc="o.sale_id.sales_person.work_phone"/></p>
+                        <p style="margin-top: 0;margin-bottom:0;"><b><i>For Al Mayas Insulation<br/>(DCL &amp; Ministry of Public Works &amp; trakhees approved company)</i></b></p>
+                        <p style="text-align:right;"><i>Verified By</i></p>
+                    </div>
+
+
+
+
+
+                </div>
+                <div class="footer" style="font-size:16px;border-top:1px solid black;text-align: center;">
+                    <p>Tel.: 06-5345347 Fax : 06-5345990 P.O.Box : 27734  Sharjah – U.A.E. E- mail : info@almayasuae.com<br/>
+                        Tel: 04-2257511 Fax : 04-2257511 P.O.Box : 234828  Dubai –U.A.E. Website : www.almayasuae.com  </p>
+                </div>
+            </t>
+        </t>
+    </template>
+
+
+    <record id="quotation_paper_format" model="report.paperformat">
+        <field name="name">European A4</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">20</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">25</field>
+        <field name="dpi">90</field>
+    </record>
+
+
+    <report
+            string="Quotation"
+            id="action_sales_project_quotation_report"
+            model="sales.project.quotation"
+            name="construction_management_app.sales_project_quotation_report_template"
+            file="construction_management_app.sales_project_quotation_report_template"
+            report_type="qweb-pdf"
+            paperformat="construction_management_app.quotation_paper_format"/>
+
+</odoo>
