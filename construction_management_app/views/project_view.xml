@@ -1,0 +1,541 @@
+<odoo>
+    <data>
+        <record id="view_project_tree_inherit" model="ir.ui.view">
+            <field name="name">project.project.tree</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="create">false</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_search_inherit" model="ir.ui.view">
+            <field name="name">project.project.search</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_project_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="replace">
+                    <field name="project_manager" string="Project Manager"/>
+                </xpath>
+                <xpath expr="//filter[@name='Manager']" position="replace">
+                    <filter string="Project Manager" name="Manager" context="{'group_by': 'project_manager'}"/>
+                </xpath>
+            </field>
+        </record>
+
+
+
+        <record id="edit_project_inherit_construction" model="ir.ui.view">
+            <field name="name">project.project.form</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="create">false</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[@name='settings']" position="before">
+                    <page name="project_tasks" string="Phases">
+                        <button name="generate_proforma_invoice" type="object" string="Generate Proforma" class="oe_highlight"/>
+                        <field name="project_task_ids">
+                            <tree editable="bottom" create="0" delete="0">
+                                <field name="name" string="Phase"/>
+                                <field name="start_date"/>
+                                <field name="date_end"/>
+                                <field name="stage"/>
+                                <field name="proforma_generated"/>
+
+                            </tree>
+                        </field>
+                    </page>
+
+                    <page name="construction_sites" string="Documents">
+                        <field name="document_ids">
+                            <tree editable="bottom">
+                                <field name="file"/>
+                                <field name="phase_ids" invisible="1"/>
+                                <field name="project_phase_ids" widget="many2many_tags"/>
+                                <field name="description"/>
+                            </tree>
+                        </field>
+
+                    </page>
+                    <page name="planning" string="Planning">
+                        <notebook>
+                            <page name="material_planning" string="Material Planning">
+                                <button name="generate_transfer" string="Generate Transfer" type="object" class="oe_highlight"/>
+                                <field name="project_material_plan_ids" nolabel="1" context="{'default_project_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="description"/>
+                                        <field name="total_qty" readonly="1" force_save="1"/>
+                                        <field name="product_uom_qty"/>
+                                        <field name="product_uom"/>
+                                        <field name="unit_price" sum="Total Price" widget="monetary" optional="show"/>
+                                        <field name="total_cost" sum="Total Cost" widget="monetary" optional="show"/>
+                                        <field name="project_id" invisible="1"/>
+                                        <field name="material_task_id" domain="[('project_id','=',project_id)]" string="Phase" required="1"/>
+                                        <field name="transfer_generated" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="labour_planning" string="Labour Planning">
+                                <field name="project_labour_plan_ids" nolabel="1" context="{'default_project_id': active_id}">
+                                    <tree editable="bottom">
+                                        <field name="project_id" invisible="1"/>
+                                        <field name="task_id" domain="[('project_id','=',project_id)]" string="Phase" required="1"/>
+                                        <field name="labour_no" string="No. of Labours"/>
+                                        <field name="no_days"/>
+                                        <field name="working_hours"/>
+                                        <field name="unit_price"/>
+                                        <field name="planned_hours" sum="Total Planned Hours" widget="float_time" optional="show"/>
+                                        <field name="total_cost" sum="Total Cost" widget="monetary" optional="show"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </page>
+                    <page string="Analysis" name="project_details">
+                        <group>
+                            <group>
+                                <field name="total_sale_cost" invisible="1"/>
+                                <field name="untaxed_sale_cost" string="Total Sale Cost"/>
+                                <field name="profit_amount"/>
+                                <field name="profit_percent"/>
+                            </group>
+                            <group>
+                                <field name="planned_material_cost" invisible="1"/>
+                                <field name="planned_labour_cost" invisible="1"/>
+                                <field name="total_material_cost"/>
+                                <field name="total_labour_cost"/>
+                            </group>
+                        </group>
+                        <field name="other_expenses_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="expense"/>
+                                <field name="cost" sum="Total Cost" widget="monetary" optional="show"/>
+                            </tree>
+                        </field>
+                        <group>
+                            <group>
+                                <field name="other_expenses"/>
+                                <field name="final_profit_amount"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//form/sheet/div[@name='button_box']" position="inside">
+                    <button class="oe_stat_button" type="object" icon="fa-tasks" name="view_notes">
+                        <field string="Notes" name="notes_count" widget="statinfo" options="{'label_field': 'label_notes'}"/>
+                    </button>
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button type="object" name="action_view_sale_order" class="oe_stat_button" icon="fa-dollar" string="Sales Order"/>
+                    <button type="object" name="action_view_proforma" class="oe_stat_button" icon="fa-dollar">
+                        <field name="proforma_count" widget="statinfo" string="Proforma Invoices"/>
+                    </button>
+                    <button type="object" name="action_open_sale_invoices" class="oe_stat_button" icon="fa-dollar">
+                        <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                    </button>
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <button name="allocate_stage_phase" type="object" string="Allocate Stages" class="oe_highlight" attrs="{'invisible':[('stage_allocated','=',True)]}"/>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="project_phase_ids" widget="many2many_tags" readonly="1"/>
+                    <field name="stage_allocated" invisible="1"/>
+                    <field name="source_location_id"/>
+                    <field name="dest_location_id"/>
+                    <field name="custom_picking_type_id"/>
+                </xpath>
+                <xpath expr="//notebook" position="before">
+                    <group>
+                        <group>
+                            <field name="s_person"/>
+                            <field name="partner_id" string="Customer"/>
+                            <field name="job_order"/>
+                            <field name="plot_no"/>
+                        </group>
+                        <group>
+                            <field name="contract_date"/>
+                            <!--                            <field name="user_id" string="Project Manager" attrs="{'readonly':[('active','=',False)]}"/>-->
+                            <field name="project_manager"/>
+                            <field name="construction_type"/>
+                            <!--                            <field name="location_id" context="{'search_default_customer':1, 'show_address': 1}" options="{&quot;always_reload&quot;: True}"/>-->
+                            <field name="location"/>
+                            <field name="project_start_date"/>
+                            <field name="project_end_date"/>
+                            <field name="working_days"/>
+                        </group>
+
+                    </group>
+                </xpath>
+                <xpath expr="//form/div" position="replace">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_view_task_subtask" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+            <field name="search_view_id" ref="project.view_task_search_form"/>
+            <field name="help" type="html">
+                <p>
+                    Odoo's project management allows you to manage the pipeline of your tasks efficiently. You can track progress, discuss on tasks, attach documents, etc.
+                </p>
+            </field>
+        </record>
+
+        <record id="edit_sales_project_inherit_construction" model="ir.ui.view">
+            <field name="name">project.project.form.sales</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="sale_timesheet.project_project_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='billing_employee_rate']" position="replace">
+                    <page name="billing_employee_rate" string="Invoicing" invisible="1">
+                        <group>
+                            <field name="billable_type" invisible="1"/>
+                            <field name="sale_order_id" attrs="{'invisible': [('billable_type', '=', 'no')]}"/>
+                            <field name="sale_line_id" attrs="{'invisible': [('billable_type', '=', 'no')]}" context="{'create': False, 'edit': False, 'delete': False}"/>
+                        </group>
+                        <field name="sale_line_employee_ids">
+                            <tree editable="top">
+                                <field name="employee_id" options="{'no_create': True}"/>
+                                <field name="sale_line_id" options="{'no_create': True}" domain="[('order_id','=',parent.sale_order_id), ('is_service', '=', True)]"/>
+                                <field name="price_unit"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="open_view_task_list_kanban_subtask" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="action_view_task_subtask"/>
+        </record>
+
+        <record id="open_view_task_list_tree_subtask" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_view_task_subtask"/>
+        </record>
+
+        <record model="ir.ui.view" id="view_task_form2_inherit_subtask">
+            <field name="name">project.task.view</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/field[@name='stage_id']" position="before">
+                    <button string="Create Subtasks" type="action" name="%(action_proejct_subtask_user_wizard)d"
+                            class="oe_highlight" groups="project.group_project_manager" invisible="1" />
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[2]" position="after">
+                    <page name="subtasks" string="Subtasks">
+                        <field name="child_task_ids" readonly="True" />
+                    </page>
+                </xpath>
+                <field name="user_id" position="after">
+                    <field name="parent_task_id" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_task_search_form_inherit_parenttask">
+            <field name="name">project.task.view</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <field name="parent_task_id"/>
+                </xpath>
+                <xpath expr="//search/group" position="inside">
+                    <filter string="Parent Task" name="parent_task" context="{'group_by':'parent_task_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_project_phase_template_wizard_form">
+            <field name="name">project.phase.wiz.view</field>
+            <field name="model">project.phase.wiz</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="project_phase_ids"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="allocate" class="oe_highlight" string="Allocate" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_project_phase_template_wizard" model="ir.actions.act_window">
+            <field name="name">Project Phase Template</field>
+            <field name="res_model">project.phase.wiz</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="project_kanban_view_inherit" model="ir.ui.view">
+            <field name="name">project.project.kanban.view.inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.project_view_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="create">false</attribute>
+                </xpath>
+
+                <xpath expr="//div/div[2]/div[1]" position="after">
+                    <div class="col-8">
+                        <strong><field name="stage_id"/></strong>
+                    </div>
+                    <div class="col-12">
+                        <strong>Proforma : <span class="text-danger"> <field name="proforma_pending"/> Pending</span></strong><span style="padding:5px 5px;"></span>
+                        <strong><span class="text-success"><field name="proforma_paid"/> Paid</span></strong>
+                    </div>
+                    <div class="col-12">
+                        <strong>Invoices : <span class="text-danger"> <field name="pending_invoice_amount"/> Pending</span></strong><span style="padding:5px 5px;"></span>
+                        <strong><span class="text-success"><field name="paid_invoice_amount"/> Paid</span></strong>
+                    </div>
+
+
+
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="sale_order_form_project_inherit" model="ir.ui.view">
+            <field name="name">sale.order.project.view.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="project_name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="validity" attrs="{'invisible': [('project_ids', '=', [])]}"/>
+                    <field name="job_order" attrs="{'invisible': [('project_ids', '=', [])]}"/>
+                    <field name="contract_date" attrs="{'invisible': [('project_ids', '=', [])]}"/>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="sales_person" required="1"/>
+                    <field name="project_manage" required="1"/>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="sale_order_search_project_inherit" model="ir.ui.view">
+            <field name="name">sale.order.project.search.view.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="sales_person"/>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//filter[@name='salesperson']" position="replace">
+                    <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by': 'sales_person'}"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="sale_report_search_project_inherit" model="ir.ui.view">
+            <field name="name">sale.report.project.search.view.inherit</field>
+            <field name="model">sale.report</field>
+            <field name="inherit_id" ref="sale.view_order_product_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="sales_person"/>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//filter[@name='User']" position="replace">
+                    <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by': 'sales_person'}"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record id="sale_order_timesheet_form_project_inherit" model="ir.ui.view">
+            <field name="name">sale.order.timesheet.project.view.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_timesheet.view_order_form_inherit_sale_timesheet"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_project_ids']" position="after">
+                    <button type="object" name="action_open_sale_project" class="oe_stat_button" icon="fa-puzzle-piece" string="Project" attrs="{'invisible': [('project_ids', '=', [])]}" groups="project.group_project_manager">
+                        <field name="project_ids" invisible="1"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_move_invoice_form_inherit_project_cons" model="ir.ui.view">
+            <field name="name">account.move.construction</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_user_id']" position="before">
+                    <field name="sales_person"/>
+                    <field name="amount_paid" invisible="1"/>
+                    <field name="paid_amount" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_move_invoice_search_inherit_project_cons" model="ir.ui.view">
+            <field name="name">account.move.search.construction</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_user_id']" position="after">
+                    <field name="sales_person" string="Salesperson"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_user_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//filter[@name='salesperson']" position="replace">
+                    <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by': 'sales_person'}"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="account_invoice_report_inherit_project_cons" model="ir.ui.view">
+            <field name="name">account.invoice.report.construction</field>
+            <field name="model">account.invoice.report</field>
+            <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_user_id']" position="after">
+                    <field name="sales_person"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_user_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//filter[@name='user']" position="replace">
+                    <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by': 'sales_person'}"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+
+        <record id="hr_employee_view_form_inherit_timesheet_project_cons" model="ir.ui.view">
+            <field name="name">hr.employee.construction</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_employee_view_form_inherit_timesheet"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/group[@name='timesheet']" position="inside">
+                    <field name="monthly_target"/>
+                    <field name="sales_target"/>
+                    <field name="employee_initial"/>
+                </xpath>
+            </field>
+        </record>
+
+
+
+        <record id="view_company_form_inherit" model="ir.ui.view">
+            <field name="name">res.company.form.view.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='phone']" position="after">
+                    <field name="fax"/>
+                </xpath>
+                <xpath expr="//field[@name='favicon']" position="after">
+                    <field name="certificate_header"/>
+                    <field name="certificate_footer"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="account_invoice_form_project_inherit" model="ir.ui.view">
+            <field name="name">account.move.project.view.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_date']" position="after">
+                    <field name="sale_order_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="construction_type_form_view" model="ir.ui.view">
+            <field name="name">construction.type.form</field>
+            <field name="model">construction.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="construction_type_tree_view" model="ir.ui.view">
+            <field name="name">construction.type.tree</field>
+            <field name="model">construction.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_construction_type" model="ir.actions.act_window">
+            <field name="name">Project Type</field>
+            <field name="res_model">construction.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_construction_type" name="Project Type" parent="menu_const_configuration" action="action_construction_type" sequence="11"/>
+
+
+        <record id="res_partner_form_project_inherit" model="ir.ui.view">
+            <field name="name">res.partner.project.view.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="before">
+                    <field name="partner_initial"/>
+                </xpath>
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>

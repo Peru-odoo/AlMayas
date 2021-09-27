@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_proforma_invoice_form" model="ir.ui.view">
+        <field name="name">proforma.invoice.form</field>
+        <field name="model">proforma.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Pro-Forma Invoice ">
+                <header>
+                    <button name="print_proforma_invoice" type="object" string="Print Proforma Invoice" class="oe_highlight"/>
+                    <button name="mark_as_paid" type="object" string="Mark as paid" class="oe_highlight" states="new"/>
+                    <button name="proforma_mail_send" string="Send Email" type="object" class="oe_highlight" states="new"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1" readonly="1"/>
+                            <field name="sale_order_id" readonly="1" required="1"/>
+                            <field name="project_id" readonly="1" required="1"/>
+                            <field name="sale_name" invisible="1"/>
+                            <field name="task_ids" widget="many2many_tags" readonly="1" required="1"/>
+                            <field name="description" required="1"/>
+                        </group>
+                        <group>
+                            <field name="amount_untaxed" readonly="1"/>
+                            <field readonly="1" name="amount_tax"/>
+                            <field name="sale_order_value" readonly="1" required="1"/>
+                            <field name="amount" widget="radio" required="1"/>
+                            <field name="percentage" attrs="{'invisible':[('amount','!=','percent')]}"/>
+                            <field name="fixed_amount" attrs="{'invisible':[('amount','!=','fixed')]}"/>
+                            <field name="final_amount" string="Payable Amount(Tax Excluded)"/>
+<!--                            <field name="remaining_amount"/>-->
+                            <field name="tax_ids" widget="many2many_tags" invisible="0"/>
+                            <field name="tax_amount" invisible="0"/>
+                            <field name="tax_included" invisible="0" string="Payable Amount(Tax Included)"/>
+                            <field name="tax_excluded" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_proforma_invoice_tree" model="ir.ui.view">
+        <field name="name">proforma.invoice.tree</field>
+        <field name="model">proforma.invoice</field>
+        <field name="arch" type="xml">
+            <tree string="Proforma Invoice">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="description"/>
+                <field name="final_amount"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_proforma_invoice" model="ir.actions.act_window">
+        <field name="name">Pro-Forma Invoice</field>
+        <field name="res_model">proforma.invoice</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_construction_proforma_invoices" name="Pro-Forma Invoices" parent="menu_const_configuration" action="action_proforma_invoice" sequence="10"/>
+
+    <record id='unpaid_proforma_invoice_cron_job' model='ir.cron'>
+        <field name='name'>Proforma Invoice: Send Email to Unpaid Proforma</field>
+        <field name='model_id' ref='model_proforma_invoice'/>
+        <field name='state'>code</field>
+        <field name='code'>model.send_unpaid_proforma_email()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>weeks</field>
+        <field name='numbercall'>-1</field>
+        <field name="doall" eval="False"/>
+    </record>
+
+</odoo>
