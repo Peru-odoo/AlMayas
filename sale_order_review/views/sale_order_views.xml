@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_form_custom_review" model="ir.ui.view">
+        <field name="name">sale_order_form_custom_review</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="draft,review,approve,sent,sale"/>
+            </xpath>
+            <xpath expr="//button[5]" position="replace">
+                <button name="action_quotation_send" string="Send by Email" type="object" states="approve"
+                        class="btn-primary"/>
+
+            </xpath>
+            <xpath expr="//button[8]" position="replace">
+                <button name="action_confirm" string="Confirm" type="object"
+                        attrs="{'invisible': [('state', 'not in', ['approve'])]}"/>
+
+            </xpath>
+            <!--            <xpath expr="//button[@name='action_cancel']" position="replace">-->
+            <!--                <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>-->
+
+            <!--            </xpath>-->
+            <xpath expr="//button[@name='action_draft']" position="replace">
+                <button name="action_draft" type="object" string="Set to Quotation"
+                        attrs="{'invisible': ['|',('state', '!=', 'cancel'),('is_revised','=', True)]}"/>
+
+            </xpath>
+
+
+            <xpath expr="//header" position="inside">
+                <field name="is_revised" invisible="1"/>
+                <button name="action_sent_review" string="Sent to Review" type="object"
+                        states="draft" class="btn-primary"/>
+                <button name="action_order_approve" string="Approve" type="object"
+                        states="review" class="btn-primary" groups="sale_order_review.group_sale_revision"/>
+                <button name="revise_quotation" string="Revise" type="object"
+                        states="sent" class="btn-primary"
+                        attrs="{'invisible': ['|',('rev_count', '!=', 0),('state', '!=', 'sent')]}"/>
+                <button name="action_cancel" states="review" type="object" string="Cancel"/>
+
+
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="rev_sale_id" invisible="1"/>
+                <field name="src_sale_id" invisible="1"/>
+                <field name="rev_count" invisible="1"/>
+                <field name="org_sale_id" invisible="1"/>
+                <field name="src_count" invisible="1"/>
+
+            </xpath>
+            <xpath expr="//notebook/page[@name='other_information']" position="after">
+                <page name="sale_revisions" string="Sale Revisions"
+                      attrs="{'invisible': ['|',('rev_count', '=', 1),('rev_count', '=', 0)]}">
+                    <field name="rev_sale_ids"/>
+                </page>
+                <page name="sale_history" string="Sale Revisions"
+                      attrs="{'invisible': ['|',('src_count', '=', 0),('rev_count', '>', 1)]}">
+                    <field name="src_sale_ids"/>
+                </page>
+
+
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-danger text-center o_form_header"
+                     attrs="{'invisible': [('is_revised', '=', False)]}" role="status">
+                    <strong>This Quotation is revised and cancelled.
+                    </strong>
+
+                </div>
+            </xpath>
+
+
+        </field>
+    </record>
+</odoo>
