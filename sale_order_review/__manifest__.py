@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Sale Order Review',
-    'version': '13.0.0.1',
+    'version': '13.0.0.2',
     'summary': 'Sale Order Review',
     'sequence': 1,
     'description': """

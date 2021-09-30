@@ -65,7 +65,7 @@
             <xpath expr="//sheet" position="before">
                 <div class="alert alert-danger text-center o_form_header"
                      attrs="{'invisible': [('is_revised', '=', False)]}" role="status">
-                    <strong>This Quotation is revised and cancelled.
+                    <strong>Quotation is revised.
                     </strong>
 
                 </div>
