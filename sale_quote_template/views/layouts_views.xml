@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="layout_layout_tree_view" model="ir.ui.view">
+        <field name="name">layout.layout.tree.view</field>
+        <field name="model">layout.layout</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Layouts" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="layout_layout_action" model="ir.actions.act_window">
+        <field name="name">Layouts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">layout.layout</field>
+        <field name="view_mode">tree,form</field>
+
+    </record>
+
+
+    <menuitem id="layout_layout_manu" action="layout_layout_action" parent="sale.menu_sales_config" sequence="1"
+              name="Layouts"/>
+
+    <record id="quote_layout_layout_form_view" model="ir.ui.view">
+        <field name="name">quote.layout.layout.form.view</field>
+        <field name="model">quote.layout</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Quotation Layouts">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="layout_id"/>
+                            <field name="name"/>
+
+                        </group>
+                    </group>
+                    <h4>Content</h4>
+                    <field name="content"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="quote_layout_layout_tree_view" model="ir.ui.view">
+        <field name="name">quote.layout.layout.tree.view</field>
+        <field name="model">quote.layout</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Quotation Layouts">
+                <field name="layout_id"/>
+                <field name="name"/>
+                <field name="content"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="quote_layout_layout_action" model="ir.actions.act_window">
+        <field name="name">Quotation Layouts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">quote.layout</field>
+        <field name="view_mode">tree,form</field>
+
+    </record>
+
+    <menuitem id="quote_layout_layout_menu" action="quote_layout_layout_action" parent="sale.menu_sales_config"
+              sequence="1"
+              name="Quotation Layouts"/>
+
+    <!--Sale Order Inherited view-->
+    <record id="sale_order_form_custom_review" model="ir.ui.view">
+        <field name="name">sale_order_form_custom_review</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="sale_order_template_id" position="after">
+                <field name="layout_id"/>
+            </field>
+            <xpath expr="//notebook/page[@name='other_information']" position="after">
+                <page name="quote_templates" string="Report Layout" attrs="{'invisible': [('layout_id', '=', False)]}">
+                    <field name="quote_layout_ids">
+                        <tree>
+                            <field name="order_id" invisible="1"/>
+                            <field name="layout_id"/>
+                            <field name="quote_layout_id"/>
+                            <field name="content"/>
+                        </tree>
+                        <form>
+                            <sheet>
+                                <group>
+                                    <group>
+                                        <field name="order_id" invisible="1"/>
+
+                                        <field name="layout_id" required="1" options="{'no_create_edit': True, 'no_open': True}"/>
+                                        <field name="quote_layout_id" domain="[('layout_id', '=', layout_id)]" options="{'no_create_edit': True, 'no_open': True}"/>
+                                    </group>
+                                </group>
+                                <h4>Content</h4>
+                                <field name="content"/>
+
+                            </sheet>
+                        </form>
+
+                    </field>
+
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+
+</odoo>

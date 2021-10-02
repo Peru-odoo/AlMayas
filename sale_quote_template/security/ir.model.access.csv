@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_layout_layout_new,access.layout.layout.new,model_layout_layout,,1,1,1,1
+access_quote_layout_layout_new,access.quote.layout.layout.new,model_quote_layout,,1,1,1,1
+access_sale_order_line_layout_new,access.sale.order.line.layout.new,model_sale_order_line_layouts,,1,1,1,1
