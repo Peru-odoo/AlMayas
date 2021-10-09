@@ -370,6 +370,7 @@ class SaleOrder(models.Model):
     user_id = fields.Many2one(
         'res.users',string='User',index=True,tracking=2,default=lambda self: self.env.user,
         domain=lambda self: [('groups_id','in',self.env.ref('sales_team.group_sale_salesman').id)])
+    attention = fields.Text(string="Attention")
 
     @api.onchange('contract_date', 'job_order', 'project_manage', 'sales_person')
     def onchange_sale_order_details(self):
