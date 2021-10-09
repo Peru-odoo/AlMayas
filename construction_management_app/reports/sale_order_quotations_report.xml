@@ -81,7 +81,7 @@
                                             <b><span t-esc="o.sales_person.name"/> </b>
                                         </td>
                                         <t t-if="o.reviewed_by">
-                                            <td>
+                                            <td style="padding-left:300px;">
                                                 <t t-if="o.reviewed_by.sign">
                                                     <img t-if="o.reviewed_by.sign" style="width:100px;z-index:800;" t-att-src="'data:image/png;base64,%s' % to_text(o.reviewed_by.sign)"/>
                                                 </t>
@@ -92,7 +92,7 @@
                                         <td style="text-align:left;">
                                             <span style="text-align:left; width:100%; display:block;" t-esc="o.sales_person.work_phone"/>
                                         </td>
-                                        <td style="">
+                                        <td style="padding-left:300px;">
                                             <i>Verified By</i>
                                         </td>
                                     </tr>
