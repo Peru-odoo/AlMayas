@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError, Warning
 
 
 class ProjectProject(models.Model):
@@ -458,7 +458,11 @@ class SaleOrder(models.Model):
         }
         return invoice_vals
 
-
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        if not self.project_manage:
+            raise Warning("Please Add the Project Manager.")
+        return res
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
