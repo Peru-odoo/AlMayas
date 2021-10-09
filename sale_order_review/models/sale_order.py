@@ -16,6 +16,7 @@ class SaleOrder(models.Model):
     org_sale_id = fields.Many2one('sale.order', string="Origin", copy=False, )
     src_count = fields.Integer(string="src Orders", compute="src_order_count", copy=False)
     is_revised = fields.Boolean(string="Is Revised", copy=False)
+    reviewed_by = fields.Many2one('res.users', string="Reviewed By", track_visibility='onchange')
 
     # def action_cancel(self):
     #     if self.rev_sale_ids:
@@ -26,6 +27,7 @@ class SaleOrder(models.Model):
 
     def action_order_approve(self):
         self.state = 'approve'
+        self.reviewed_by = self.env.user.id
 
     # def action_quotation_send(self):
     #     self.state = 'draft'

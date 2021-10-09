@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="sales_order_pjts_quotation_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="header">
+                    <div class="row">
+                        <t t-if="o.company_id.certificate_header">
+                            <img style="width:100%;z-index:600;" t-att-src="'data:image/png;base64,%s' % to_text(o.company_id.certificate_header)"/>
+                        </t>
+                    </div>
+                </div>
+                <div t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" class="article">
+                    <div class="page" style="font-family:Times New Roman;">
+                        <div style="padding-left:50px;padding-right:50px;">
+                            <hr/>
+                            <table style="border-collapse: collapse;width: 100%;">
+                                <tbody>
+                                    <tr style="width:100%;font-weight:bold;">
+                                        <td style="width:10%;">To:</td>
+                                        <td style="width:40%;"><span t-esc="o.partner_id.name"/></td>
+                                        <td style="width:10%;">From:</td>
+                                        <td style="width:40%;"><span t-esc="o.company_id.name"/></td>
+                                        <td/>
+                                    </tr>
+                                    <tr style="width:100%;font-weight:bold;">
+                                        <td style="padding-top:5px;"><span>Tel:</span></td>
+                                        <td style="padding-top:5px;"><span t-esc="o.partner_id.phone"/></td>
+                                        <td style="padding-top:5px;"><span>Fax:</span></td>
+                                        <td style="padding-top:5px;"><span t-esc="o.partner_id.mobile"/></td>
+                                        <td style="padding-top:5px;">Date:</td>
+                                        <td style="padding-top:5px;"><span t-esc="o.date_order" t-options="{'widget': 'date','format': 'dd/MM/yyyy'}"/></td>
+                                    </tr>
+                                    <tr style="width:100%;font-weight:bold;">
+                                        <td style="padding-top:5px;">Attn:</td>
+                                        <td style="padding-top:5px;"><span t-esc="o.attention"/></td>
+                                        <td style="padding-top:5px;">Ref.</td>
+                                        <td style="padding-top:5px;"><span t-esc="o.name"/></td>
+                                        <td/>
+                                    </tr>
+                                    <tr style="width:100%;font-weight:bold;">
+                                        <td style="padding-top:5px;">Project:</td>
+                                        <td style="padding-top:5px;"><span t-esc="o.project_name"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                             <hr/>
+                        </div>
+                        <br/>
+                        <div style="padding-left:50px;padding-right:50px;">
+                            <t t-if="o.quote_layout_ids">
+                                <t t-foreach="o.quote_layout_ids" t-as="layout">
+                                    <t t-if="layout.quote_layout_id.name == 'Subject'">
+                                        <div style="display:inline;">
+                                            <u>Subject:<span style="display:inline;" t-raw="layout.content"/></u>
+                                        </div>
+                                    </t>
+                                    <t t-elif="layout.quote_layout_id.name == 'Salutation'">
+                                        <div style="display:inline;">
+                                            <span t-raw="layout.content"/>
+                                        </div>
+                                    </t>
+                                    <t t-elif="layout.quote_layout_id.name == 'Scope of Work'">
+                                        <div style="display:inline;">
+                                            <span t-raw="layout.content"/>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <h6><i><u><t t-esc="layout.quote_layout_id.name"/></u></i></h6>
+                                        <t t-raw="layout.content"/>
+                                    </t>
+                                </t>
+                            </t>
+                        </div>
+                        <div style="padding-left:80px;padding-right:50px;margin-top:200px;">
+                            <table width="100%" cellspacing="0" border="0" >
+                                <tbody>
+
+                                    <tr>
+                                        <td style="text-align:left;">
+                                            <b><span t-esc="o.sales_person.name"/> </b>
+                                        </td>
+                                        <t t-if="o.reviewed_by">
+                                            <td style="padding-left:300px;">
+                                                <t t-if="o.reviewed_by.sign">
+                                                    <img t-if="o.reviewed_by.sign" style="width:100px;z-index:800;" t-att-src="'data:image/png;base64,%s' % to_text(o.reviewed_by.sign)"/>
+                                                </t>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:left;">
+                                            <span style="text-align:left; width:100%; display:block;" t-esc="o.sales_person.work_phone"/>
+                                        </td>
+                                        <td style="padding-left:300px;">
+                                            <i>Verified By</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="font-size:18px;text-align:left;">
+                                            <b style="text-align:left; width:100%; display:block;"><i>For Al Mayas Insulation<br/>(DCL &amp; Ministry of Public Works &amp; trakhees approved company)</i></b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="footer" style="font-size:16px;text-align: center;border-top:1px solid black;">
+                            <p>Tel.: 06-5345347 Fax : 06-5345990 P.O.Box : 27734  Sharjah – U.A.E. E- mail : info@almayasuae.com<br/>
+                                Tel: 04-2257511 Fax : 04-2257511 P.O.Box : 234828  Dubai –U.A.E. Website : www.almayasuae.com  </p>
+                        </div>
+
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+
+    <record id="salequotation_paper_format" model="report.paperformat">
+        <field name="name">European A4</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">36</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">39</field>
+        <field name="dpi">90</field>
+    </record>
+
+
+    <report
+            string="Project Quotation Report"
+            id="sale_order_pjt_quotation_report_template"
+            model="sale.order"
+            name="construction_management_app.sales_order_pjts_quotation_report"
+            file="construction_management_app.sales_order_pjts_quotation_report"
+            report_type="qweb-pdf"
+            attachment="'Project Quotation Report' + '.pdf'"
+            paperformat="construction_management_app.salequotation_paper_format"/>
+
+</odoo>
