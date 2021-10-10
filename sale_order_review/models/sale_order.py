@@ -64,5 +64,6 @@ class SaleOrder(models.Model):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
-        self.state = 'draft'
+        if self.state == 'approve':
+            self.state = 'draft'
         return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)

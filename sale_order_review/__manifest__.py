@@ -8,6 +8,8 @@
         Sale Order Review
         """,
     'category': 'sales',
+'author': 'Chlpn',
+    'website': "www.hashcodeit.com",
     'website': '',
     'depends': ['sale_management'],
     'data': [
